@@ -19,17 +19,18 @@ This document outlines the complete development roadmap to transform VMGLingo in
 
 ## 📋 Phase 1: Core Learning Experience (Weeks 1-4)
 
+
 ### 1.1 Expand Question Types
 **Priority: High** | **Difficulty: Medium**
 
-- [ ] Add TRANSLATION type (Vietnamese → English)
-- [ ] Add REVERSE_TRANSLATION type (English → Vietnamese)
-- [ ] Add FILL_IN_BLANK type
-- [ ] Add MATCHING_PAIRS type
-- [ ] Add WORD_ORDER type (arrange words to form sentence)
-- [ ] Update database schema to support new types
-- [ ] Create UI components for each type
-- [ ] Add validation logic for each type
+- [x] Add TRANSLATION type (Vietnamese → English)
+- [x] Add REVERSE_TRANSLATION type (English → Vietnamese)
+- [x] Add FILL_IN_BLANK type
+- [x] Add MATCHING_PAIRS type
+- [x] Add WORD_ORDER type (arrange words to form sentence)
+- [x] Update database schema to support new types
+- [x] Create UI components for each type
+- [x] Add validation logic for each type
 
 **Files to modify:**
 - `db/schema.ts` - Update challengesEnum
