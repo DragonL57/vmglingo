@@ -234,7 +234,6 @@ You might encounter some bugs while using this app. You are more than welcome to
 
 Useful resources and dependencies that are used in Lingo.
 
-- Special Thanks to Kenney Assets: https://kenney.nl/
 - Freesound: https://freesound.org/
 - Elevenlabs AI: https://elevenlabs.io/
 - Flagpack: https://flagpack.xyz/
@@ -265,7 +264,3 @@ Useful resources and dependencies that are used in Lingo.
 - [tailwind-merge](https://www.npmjs.com/package/tailwind-merge): ^2.2.2
 - [tailwindcss-animate](https://www.npmjs.com/package/tailwindcss-animate): ^1.0.7
 - [zustand](https://www.npmjs.com/package/zustand): ^4.5.2
-
-## :coffee: Buy Me a Coffee
-
-[<img src="https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" width="200" />](https://www.buymeacoffee.com/sanidhy "Buy me a Coffee")
