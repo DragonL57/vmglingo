@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+
 import { cn } from "@/lib/utils";
 
 type FillInBlankChallengeProps = {
@@ -27,14 +28,6 @@ export const FillInBlankChallenge = ({
     setSelectedAnswer(option);
     onAnswer(option);
   };
-
-  // Replace ____ with the selected answer or keep it as blank
-  const displaySentence = sentence.replace(
-    "____",
-    selectedAnswer
-      ? `[${selectedAnswer}]`
-      : "____"
-  );
 
   return (
     <div className="space-y-6">

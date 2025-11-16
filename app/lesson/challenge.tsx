@@ -2,10 +2,10 @@ import { challengeOptions, challenges } from "@/db/schema";
 import { cn } from "@/lib/utils";
 
 import { Card } from "./card";
-import { TranslationChallenge } from "./translation-challenge";
 import { FillInBlankChallenge } from "./fill-in-blank-challenge";
-import { WordOrderChallenge } from "./word-order-challenge";
 import { MatchingPairsChallenge } from "./matching-pairs-challenge";
+import { TranslationChallenge } from "./translation-challenge";
+import { WordOrderChallenge } from "./word-order-challenge";
 
 type ChallengeProps = {
   options: (typeof challengeOptions.$inferSelect)[];
@@ -34,7 +34,7 @@ export const Challenge = ({
       <TranslationChallenge
         question={question}
         correctAnswer={correctAnswer}
-        onAnswer={(answer) => {
+        onAnswer={() => {
           const correctOption = options.find((o) => o.correct);
           if (correctOption) {
             onSelect(correctOption.id);
@@ -78,7 +78,7 @@ export const Challenge = ({
       <WordOrderChallenge
         words={words}
         correctOrder={correctOrder}
-        onAnswer={(answer) => {
+        onAnswer={() => {
           const correctOption = options.find((o) => o.correct);
           if (correctOption) {
             onSelect(correctOption.id);
@@ -93,7 +93,7 @@ export const Challenge = ({
   // For MATCHING_PAIRS type
   if (type === "MATCHING_PAIRS") {
     // Pairs should be stored in options with specific format
-    const pairs = options.map((opt, idx) => ({
+    const pairs = options.map((opt) => ({
       id: opt.id,
       left: opt.text.split("|")[0] || "",
       right: opt.text.split("|")[1] || "",
