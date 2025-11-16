@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 type TranslationChallengeProps = {
@@ -20,6 +20,11 @@ export const TranslationChallenge = ({
 }: TranslationChallengeProps) => {
   const [input, setInput] = useState("");
 
+  // Clear input when question changes
+  useEffect(() => {
+    setInput("");
+  }, [question]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!disabled && input.trim()) {
@@ -30,7 +35,7 @@ export const TranslationChallenge = ({
   return (
     <div className="space-y-4">
       <div className="rounded-lg bg-blue-50 p-4">
-        <p className="text-lg font-semibold text-neutral-700">{question}</p>
+        <p className="text-xl font-semibold text-neutral-700">{question}</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">

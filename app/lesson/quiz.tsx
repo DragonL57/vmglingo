@@ -206,7 +206,17 @@ export const Quiz = ({
   const title =
     challenge.type === "ASSIST"
       ? "Select the correct meaning"
-      : challenge.question;
+      : challenge.type === "TRANSLATION"
+        ? "Dịch câu sau sang tiếng Anh"
+        : challenge.type === "REVERSE_TRANSLATION"
+          ? "Dịch câu sau sang tiếng Việt"
+          : challenge.type === "FILL_IN_BLANK"
+            ? "Điền vào chỗ trống"
+            : challenge.type === "WORD_ORDER"
+              ? "Sắp xếp các từ để tạo thành câu"
+              : challenge.type === "MATCHING_PAIRS"
+                ? "Ghép các cặp từ tương ứng"
+                : challenge.question;
 
   return (
     <>

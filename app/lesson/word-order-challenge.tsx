@@ -51,10 +51,6 @@ export const WordOrderChallenge = ({
 
   return (
     <div className="space-y-6">
-      <p className="text-center text-lg font-semibold text-neutral-600">
-        Sắp xếp các từ sau để tạo thành câu đúng
-      </p>
-
       {/* Selected words area */}
       <div
         className={cn(

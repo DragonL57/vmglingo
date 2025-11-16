@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
 
 type MatchingPair = {
@@ -26,9 +26,15 @@ export const MatchingPairsChallenge = ({
   const [matches, setMatches] = useState<Record<number, number>>({});
 
   const leftItems = pairs.map((p) => ({ id: p.id, text: p.left }));
-  const rightItems = pairs
-    .map((p) => ({ id: p.id, text: p.right }))
-    .sort(() => Math.random() - 0.5); // Shuffle right items
+  
+  // Use useMemo to shuffle only once, not on every re-render
+  const rightItems = useMemo(
+    () =>
+      pairs
+        .map((p) => ({ id: p.id, text: p.right }))
+        .sort(() => Math.random() - 0.5),
+    [pairs]
+  );
 
   const handleLeftClick = (id: number) => {
     if (disabled || status !== "none") return;
@@ -62,10 +68,6 @@ export const MatchingPairsChallenge = ({
 
   return (
     <div className="space-y-6">
-      <p className="text-center text-lg font-semibold text-neutral-600">
-        Ghép các cặp từ tương ứng với nhau
-      </p>
-
       <div className="grid grid-cols-2 gap-4">
         {/* Left column */}
         <div className="space-y-3">
@@ -91,12 +93,12 @@ export const MatchingPairsChallenge = ({
                     "border-red-500 bg-red-50 text-red-700"
                 )}
               >
-                {item.text}
-                {isMatched && (
-                  <span className="ml-2 text-sm">
-                    ✓
-                  </span>
-                )}
+                <span className="flex items-center justify-between">
+                  <span>{item.text}</span>
+                  {isMatched && (
+                    <span className="ml-2 text-sm text-green-600">✓</span>
+                  )}
+                </span>
               </button>
             );
           })}
@@ -126,12 +128,12 @@ export const MatchingPairsChallenge = ({
                     "border-red-500 bg-red-50 text-red-700"
                 )}
               >
-                {item.text}
-                {isMatched && (
-                  <span className="ml-2 text-sm">
-                    ✓
-                  </span>
-                )}
+                <span className="flex items-center justify-between">
+                  <span>{item.text}</span>
+                  {isMatched && (
+                    <span className="ml-2 text-sm text-green-600">✓</span>
+                  )}
+                </span>
               </button>
             );
           })}

@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 
 type FillInBlankChallengeProps = {
   sentence: string;
-  blankPosition: number; // index of the word to blank out
   options: string[];
   correctAnswer: string;
   onAnswer: (answer: string) => void;
@@ -15,7 +14,6 @@ type FillInBlankChallengeProps = {
 
 export const FillInBlankChallenge = ({
   sentence,
-  blankPosition,
   options,
   correctAnswer,
   onAnswer,
@@ -24,25 +22,30 @@ export const FillInBlankChallenge = ({
 }: FillInBlankChallengeProps) => {
   const [selectedAnswer, setSelectedAnswer] = useState<string>("");
 
-  const words = sentence.split(" ");
-  const blankedWord = words[blankPosition];
-
   const handleSelect = (option: string) => {
     if (disabled || status !== "none") return;
     setSelectedAnswer(option);
     onAnswer(option);
   };
 
+  // Replace ____ with the selected answer or keep it as blank
+  const displaySentence = sentence.replace(
+    "____",
+    selectedAnswer
+      ? `[${selectedAnswer}]`
+      : "____"
+  );
+
   return (
     <div className="space-y-6">
       {/* Sentence with blank */}
       <div className="rounded-lg bg-blue-50 p-6">
         <p className="text-xl text-neutral-700">
-          {words.map((word, index) => {
-            if (index === blankPosition) {
-              return (
+          {sentence.split("____").map((part, index, array) => (
+            <span key={index}>
+              {part}
+              {index < array.length - 1 && (
                 <span
-                  key={index}
                   className={cn(
                     "inline-block min-w-[100px] border-b-4 border-dashed border-neutral-400 px-2 py-1 text-center font-bold",
                     selectedAnswer &&
@@ -54,10 +57,9 @@ export const FillInBlankChallenge = ({
                 >
                   {selectedAnswer || "____"}
                 </span>
-              );
-            }
-            return <span key={index}> {word} </span>;
-          })}
+              )}
+            </span>
+          ))}
         </p>
       </div>
 

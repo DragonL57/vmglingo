@@ -55,7 +55,6 @@ export const Challenge = ({
     return (
       <FillInBlankChallenge
         sentence={question}
-        blankPosition={0} // You may want to parse this from the question
         options={allOptions}
         correctAnswer={correctAnswer}
         onAnswer={(answer) => {
