@@ -237,6 +237,7 @@ export const Quiz = ({
                 selectedOption={selectedOption}
                 disabled={pending}
                 type={challenge.type}
+                question={challenge.question}
               />
             </div>
           </div>

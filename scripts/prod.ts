@@ -115,6 +115,36 @@ const main = async () => {
                 question: '"zombie"',
                 order: 8,
               },
+              {
+                lessonId: lesson.id,
+                type: "TRANSLATION",
+                question: "Tôi là một sinh viên",
+                order: 9,
+              },
+              {
+                lessonId: lesson.id,
+                type: "REVERSE_TRANSLATION",
+                question: "I am a teacher",
+                order: 10,
+              },
+              {
+                lessonId: lesson.id,
+                type: "FILL_IN_BLANK",
+                question: "I ____ a student",
+                order: 11,
+              },
+              {
+                lessonId: lesson.id,
+                type: "WORD_ORDER",
+                question: "is a This book",
+                order: 12,
+              },
+              {
+                lessonId: lesson.id,
+                type: "MATCHING_PAIRS",
+                question: "Ghép các từ tương ứng",
+                order: 13,
+              },
             ])
             .returning();
 
@@ -318,6 +348,81 @@ const main = async () => {
                   correct: false,
                   text: "boy",
                   audioSrc: "/en_boy.mp3",
+                },
+              ]);
+            }
+
+            // TRANSLATION challenge
+            if (challenge.order === 9) {
+              await db.insert(schema.challengeOptions).values([
+                {
+                  challengeId: challenge.id,
+                  correct: true,
+                  text: "I am a student",
+                },
+              ]);
+            }
+
+            // REVERSE_TRANSLATION challenge
+            if (challenge.order === 10) {
+              await db.insert(schema.challengeOptions).values([
+                {
+                  challengeId: challenge.id,
+                  correct: true,
+                  text: "Tôi là một giáo viên",
+                },
+              ]);
+            }
+
+            // FILL_IN_BLANK challenge
+            if (challenge.order === 11) {
+              await db.insert(schema.challengeOptions).values([
+                {
+                  challengeId: challenge.id,
+                  correct: true,
+                  text: "am",
+                },
+                {
+                  challengeId: challenge.id,
+                  correct: false,
+                  text: "is",
+                },
+                {
+                  challengeId: challenge.id,
+                  correct: false,
+                  text: "are",
+                },
+              ]);
+            }
+
+            // WORD_ORDER challenge
+            if (challenge.order === 12) {
+              await db.insert(schema.challengeOptions).values([
+                {
+                  challengeId: challenge.id,
+                  correct: true,
+                  text: "This is a book",
+                },
+              ]);
+            }
+
+            // MATCHING_PAIRS challenge
+            if (challenge.order === 13) {
+              await db.insert(schema.challengeOptions).values([
+                {
+                  challengeId: challenge.id,
+                  correct: true,
+                  text: "man|đàn ông",
+                },
+                {
+                  challengeId: challenge.id,
+                  correct: true,
+                  text: "woman|phụ nữ",
+                },
+                {
+                  challengeId: challenge.id,
+                  correct: true,
+                  text: "boy|bé trai",
                 },
               ]);
             }
