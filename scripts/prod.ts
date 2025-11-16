@@ -26,7 +26,7 @@ const main = async () => {
     // Insert courses
     const courses = await db
       .insert(schema.courses)
-      .values([{ title: "English", imageSrc: "/gb.svg" }])
+      .values([{ title: "Tiếng Anh", imageSrc: "/gb.svg" }])
       .returning();
 
     // For each course, insert units
@@ -36,14 +36,14 @@ const main = async () => {
         .values([
           {
             courseId: course.id,
-            title: "Unit 1",
-            description: `Learn the basics of ${course.title}`,
+            title: "Đơn vị 1",
+            description: `Học những kiến thức cơ bản về ${course.title}`,
             order: 1,
           },
           {
             courseId: course.id,
-            title: "Unit 2",
-            description: `Learn intermediate ${course.title}`,
+            title: "Đơn vị 2",
+            description: `Học ${course.title} trình độ trung cấp`,
             order: 2,
           },
         ])
@@ -54,11 +54,11 @@ const main = async () => {
         const lessons = await db
           .insert(schema.lessons)
           .values([
-            { unitId: unit.id, title: "Nouns", order: 1 },
-            { unitId: unit.id, title: "Verbs", order: 2 },
-            { unitId: unit.id, title: "Adjectives", order: 3 },
-            { unitId: unit.id, title: "Phrases", order: 4 },
-            { unitId: unit.id, title: "Sentences", order: 5 },
+            { unitId: unit.id, title: "Danh từ", order: 1 },
+            { unitId: unit.id, title: "Động từ", order: 2 },
+            { unitId: unit.id, title: "Tính từ", order: 3 },
+            { unitId: unit.id, title: "Cụm từ", order: 4 },
+            { unitId: unit.id, title: "Câu", order: 5 },
           ])
           .returning();
 
@@ -70,43 +70,43 @@ const main = async () => {
               {
                 lessonId: lesson.id,
                 type: "SELECT",
-                question: 'Which one of these is "man"?',
+                question: 'Từ nào trong số này có nghĩa là "đàn ông"?',
                 order: 1,
               },
               {
                 lessonId: lesson.id,
                 type: "SELECT",
-                question: 'Which one of these is "woman"?',
+                question: 'Từ nào trong số này có nghĩa là "phụ nữ"?',
                 order: 2,
               },
               {
                 lessonId: lesson.id,
                 type: "SELECT",
-                question: 'Which one of these is "boy"?',
+                question: 'Từ nào trong số này có nghĩa là "bé trai"?',
                 order: 3,
               },
               {
                 lessonId: lesson.id,
                 type: "ASSIST",
-                question: '"man"',
+                question: '"đàn ông"',
                 order: 4,
               },
               {
                 lessonId: lesson.id,
                 type: "SELECT",
-                question: 'Which one of these is "zombie"?',
+                question: 'Từ nào trong số này có nghĩa là "zombie"?',
                 order: 5,
               },
               {
                 lessonId: lesson.id,
                 type: "SELECT",
-                question: 'Which one of these is "robot"?',
+                question: 'Từ nào trong số này có nghĩa là "người máy"?',
                 order: 6,
               },
               {
                 lessonId: lesson.id,
                 type: "SELECT",
-                question: 'Which one of these is "girl"?',
+                question: 'Từ nào trong số này có nghĩa là "bé gái"?',
                 order: 7,
               },
               {
