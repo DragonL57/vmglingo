@@ -224,7 +224,7 @@ Once the script completes, check your database to ensure that the challenges dat
 
 ## :wrench: Stats
 
-[![Stats for Lingo](/.github/images/stats.svg "Stats for Lingo")](https://pagespeed.web.dev/analysis?url=https://lingo-clone.vercel.app/ "Stats for Lingo")
+[![Stats for Lingo](/.github/images/stats.svg "Stats for Lingo")](https://pagespeed.web.dev/analysis?url=https://vmglingo.vercel.app/ "Stats for VMG Lingo")
 
 ## :raised_hands: Contribute
 
