@@ -16,11 +16,10 @@ import Link from "next/link";
 
 import Banner from "@/components/banner";
 import { Button } from "@/components/ui/button";
-import { links } from "@/config";
 import { cn } from "@/lib/utils";
 
 export const Header = () => {
-  const { isSignedIn } = useAuth();
+  // const { isSignedIn } = useAuth(); // Removed, no longer needed
   const [hideBanner, setHideBanner] = useState(true);
 
   return (
@@ -59,7 +58,7 @@ export const Header = () => {
                 </SignInButton>
               </SignedOut>
 
-              // Removed GitHub Source Code button as requested
+              {/* Removed GitHub Source Code button as requested */}
             </ClerkLoaded>
           </div>
         </div>
