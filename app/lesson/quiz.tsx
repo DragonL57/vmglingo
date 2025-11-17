@@ -10,6 +10,7 @@ import { toast } from "sonner";
 
 import { upsertChallengeProgress } from "@/actions/challenge-progress";
 import { reduceHearts } from "@/actions/user-progress";
+import { LessonTips } from "@/components/lesson-tips";
 import { MAX_HEARTS } from "@/constants";
 import { challengeOptions, challenges, userSubscription } from "@/db/schema";
 import { useHeartsModal } from "@/store/use-hearts-modal";
@@ -20,6 +21,19 @@ import { Footer } from "./footer";
 import { Header } from "./header";
 import { QuestionBubble } from "./question-bubble";
 import { ResultCard } from "./result-card";
+
+type LessonTip = {
+  id: number;
+  title: string;
+  content: string;
+};
+
+type GrammarNote = {
+  id: number;
+  title: string;
+  explanation: string;
+  examples: string[];
+};
 
 type QuizProps = {
   initialPercentage: number;
@@ -34,6 +48,8 @@ type QuizProps = {
         isActive: boolean;
       })
     | null;
+  lessonTips?: LessonTip[];
+  grammarNotes?: GrammarNote[];
 };
 
 export const Quiz = ({
@@ -42,6 +58,8 @@ export const Quiz = ({
   initialLessonId,
   initialLessonChallenges,
   userSubscription,
+  lessonTips = [],
+  grammarNotes = [],
 }: QuizProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [correctAudio, _c, correctControls] = useAudio({ src: "/correct.wav" });
@@ -234,6 +252,15 @@ export const Quiz = ({
             <h1 className="text-center text-lg font-bold text-neutral-700 lg:text-start lg:text-3xl">
               {title}
             </h1>
+
+            {/* Show tips before first challenge */}
+            {activeIndex === 0 && (lessonTips.length > 0 || grammarNotes.length > 0) && (
+              <LessonTips
+                tips={lessonTips}
+                grammarNotes={grammarNotes}
+                compact
+              />
+            )}
 
             <div>
               {challenge.type === "ASSIST" && (

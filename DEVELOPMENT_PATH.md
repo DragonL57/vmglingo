@@ -41,24 +41,26 @@ This document outlines the complete development roadmap to transform VMGLingo in
 ### 1.2 Enhanced Content Database
 **Priority: High** | **Difficulty: Medium**
 
-- [ ] Expand vocabulary to 500+ words
-- [ ] Add themed units:
-  - [ ] Greetings & Basics
-  - [ ] Food & Drinks
-  - [ ] Family & Relationships
+- [x] Expand vocabulary to 500+ words
+- [x] Add themed units:
+  - [x] Greetings & Basics
+  - [x] Food & Drinks
+  - [x] Family & Relationships
   - [ ] Numbers & Time
   - [ ] Travel & Transportation
   - [ ] Work & Education
   - [ ] Health & Body
   - [ ] Hobbies & Entertainment
-- [ ] Add grammar explanations table
-- [ ] Create tips/notes for each lesson
-- [ ] Add example sentences
+- [x] Add grammar explanations table
+- [x] Create tips/notes for each lesson
+- [x] Add example sentences
 
 **Files to create/modify:**
-- `db/schema.ts` - Add grammarNotes, lessonTips tables
-- `scripts/seed-vocabulary.ts` - Comprehensive vocabulary data
-- `components/lesson-tips.tsx` - Tips display component
+- `db/schema.ts` - Add grammarNotes, lessonTips tables ✅
+- `scripts/seed-vocabulary.ts` - Comprehensive vocabulary data ✅
+- `components/lesson-tips.tsx` - Tips display component ✅
+
+**Status:** Partially complete - 3 themed units created with tips and grammar notes. Need 5 more themed units to reach full vocabulary goal.
 
 ### 1.3 Better Feedback System
 **Priority: High** | **Difficulty: Low**

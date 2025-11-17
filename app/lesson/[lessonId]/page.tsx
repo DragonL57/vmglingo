@@ -11,30 +11,43 @@ type LessonIdPageProps = {
 };
 
 const LessonIdPage = async ({ params }: LessonIdPageProps) => {
-  const lessonData = getLesson(params.lessonId);
+  const lessonPromise = getLesson(params.lessonId);
   const userProgressData = getUserProgress();
   const userSubscriptionData = getUserSubscription();
 
   const [lesson, userProgress, userSubscription] = await Promise.all([
-    lessonData,
+    lessonPromise,
     userProgressData,
     userSubscriptionData,
   ]);
 
   if (!lesson || !userProgress) return redirect("/learn");
 
+  type LessonWithRelations = typeof lesson & {
+    challenges: Array<{ completed: boolean }>;
+    lessonTips?: Array<{ id: number; title: string; content: string }>;
+    grammarNotes?: Array<{ id: number; title: string; explanation: string; examples: string }>;
+  };
+
+  const lessonData = lesson as LessonWithRelations;
+
   const initialPercentage =
-    (lesson.challenges.filter((challenge) => challenge.completed).length /
-      lesson.challenges.length) *
+    (lessonData.challenges.filter((challenge) => challenge.completed).length /
+      lessonData.challenges.length) *
     100;
 
   return (
     <Quiz
-      initialLessonId={lesson.id}
-      initialLessonChallenges={lesson.challenges}
+      initialLessonId={lesson.id!}
+      initialLessonChallenges={lessonData.challenges}
       initialHearts={userProgress.hearts}
       initialPercentage={initialPercentage}
       userSubscription={userSubscription}
+      lessonTips={lessonData.lessonTips || []}
+      grammarNotes={lessonData.grammarNotes?.map((note) => ({
+        ...note,
+        examples: JSON.parse(note.examples) as string[],
+      })) || []}
     />
   );
 };

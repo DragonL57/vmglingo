@@ -59,6 +59,47 @@ export const lessonsRelations = relations(lessons, ({ one, many }) => ({
     references: [units.id],
   }),
   challenges: many(challenges),
+  lessonTips: many(lessonTips),
+  grammarNotes: many(grammarNotes),
+}));
+
+export const lessonTips = pgTable("lesson_tips", {
+  id: serial("id").primaryKey(),
+  lessonId: integer("lesson_id")
+    .references(() => lessons.id, {
+      onDelete: "cascade",
+    })
+    .notNull(),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  order: integer("order").notNull(),
+});
+
+export const lessonTipsRelations = relations(lessonTips, ({ one }) => ({
+  lesson: one(lessons, {
+    fields: [lessonTips.lessonId],
+    references: [lessons.id],
+  }),
+}));
+
+export const grammarNotes = pgTable("grammar_notes", {
+  id: serial("id").primaryKey(),
+  lessonId: integer("lesson_id")
+    .references(() => lessons.id, {
+      onDelete: "cascade",
+    })
+    .notNull(),
+  title: text("title").notNull(),
+  explanation: text("explanation").notNull(),
+  examples: text("examples").notNull(), // JSON array of example sentences
+  order: integer("order").notNull(),
+});
+
+export const grammarNotesRelations = relations(grammarNotes, ({ one }) => ({
+  lesson: one(lessons, {
+    fields: [grammarNotes.lessonId],
+    references: [lessons.id],
+  }),
 }));
 
 export const challengesEnum = pgEnum("type", [
