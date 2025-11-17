@@ -77,7 +77,7 @@ export const MatchingPairsChallenge = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 mt-0 lg:mt-16">
       <div className="grid grid-cols-2 gap-8">
         {/* Left column */}
         <div className="space-y-3">
