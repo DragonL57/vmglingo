@@ -59,19 +59,7 @@ export const Header = () => {
                 </SignInButton>
               </SignedOut>
 
-              <Link
-                href={links.sourceCode}
-                target="_blank"
-                rel="noreferrer noopener"
-                className={isSignedIn ? "pt-1.5" : "pt-3"}
-              >
-                <Image
-                  src="/github.svg"
-                  alt="Source Code"
-                  height={20}
-                  width={20}
-                />
-              </Link>
+              // Removed GitHub Source Code button as requested
             </ClerkLoaded>
           </div>
         </div>
