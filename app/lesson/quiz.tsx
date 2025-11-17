@@ -8,9 +8,17 @@ import Confetti from "react-confetti";
 import { useAudio, useWindowSize, useMount } from "react-use";
 import { toast } from "sonner";
 
+import { getAIFeedback } from "@/actions/ai-feedback";
 import { upsertChallengeProgress } from "@/actions/challenge-progress";
+import {
+  recordUserMistake,
+  recordAIFeedback,
+  getUserMistakeHistory,
+} from "@/actions/mistake-tracking";
 import { reduceHearts } from "@/actions/user-progress";
+import { AdaptiveHints } from "@/components/adaptive-hints";
 import { LessonTips } from "@/components/lesson-tips";
+import { AIFeedbackModal } from "@/components/modals/ai-feedback-modal";
 import { MAX_HEARTS } from "@/constants";
 import { challengeOptions, challenges, userSubscription } from "@/db/schema";
 import { useHeartsModal } from "@/store/use-hearts-modal";
@@ -99,11 +107,38 @@ export const Quiz = ({
   const [selectedOption, setSelectedOption] = useState<number>();
   const [status, setStatus] = useState<"none" | "wrong" | "correct">("none");
 
+  // AI Feedback states
+  const [showAIFeedback, setShowAIFeedback] = useState(false);
+  const [feedbackData, setFeedbackData] = useState<{
+    explanation: string;
+    grammarRule?: string;
+    examples?: string[];
+    alternatives?: string[];
+    mistakeType?: "ARTICLE" | "PREPOSITION" | "TENSE" | "SUBJECT_VERB_AGREEMENT" | "WORD_ORDER" | "VOCABULARY" | "SPELLING" | "PLURAL_SINGULAR" | "PRONOUN" | "ADJECTIVE_ADVERB" | "COMPARATIVE_SUPERLATIVE" | "MODAL_VERB" | "PASSIVE_ACTIVE" | "CONDITIONAL" | "OTHER";
+    commonMistakeForVietnamese?: string;
+    encouragement: string;
+  } | null>(null);
+  const [attemptCount, setAttemptCount] = useState(0);
+  const [mistakeHistory, setMistakeHistory] = useState<string[]>([]);
+
   const challenge = challenges[activeIndex];
   const options = challenge?.challengeOptions ?? [];
 
+  // Load user mistake history on mount
+  useMount(() => {
+    if (initialPercentage === 100) openPracticeModal();
+
+    getUserMistakeHistory(20)
+      .then((history) => {
+        const types = history.map((h: { mistakeType: string }) => h.mistakeType);
+        setMistakeHistory(types);
+      })
+      .catch(console.error);
+  });
+
   const onNext = () => {
     setActiveIndex((current) => current + 1);
+    setAttemptCount(0); // Reset attempt count for new challenge
   };
 
   const onSelect = (id: number) => {
@@ -132,6 +167,10 @@ export const Quiz = ({
 
     if (!correctOption) return;
 
+    // Get user's answer text
+    const selectedOptionData = options.find((opt) => opt.id === selectedOption);
+    const answerText = selectedOptionData?.text || "";
+
     if (correctOption.id === selectedOption) {
       startTransition(() => {
         upsertChallengeProgress(challenge.id)
@@ -145,6 +184,9 @@ export const Quiz = ({
             setStatus("correct");
             setPercentage((prev) => prev + 100 / challenges.length);
 
+            // Không hiển thị AI feedback khi đúng, chỉ log để tracking
+            // Có thể record feedback nhẹ nhàng mà không hiển thị modal
+
             // This is a practice
             if (initialPercentage === 100) {
               setHearts((prev) => Math.min(prev + 1, MAX_HEARTS));
@@ -153,9 +195,11 @@ export const Quiz = ({
           .catch(() => toast.error("Something went wrong. Please try again."));
       });
     } else {
+      setAttemptCount((prev) => prev + 1);
+
       startTransition(() => {
         reduceHearts(challenge.id)
-          .then((response) => {
+          .then(async (response) => {
             if (response?.error === "hearts") {
               openHeartsModal();
               return;
@@ -165,6 +209,44 @@ export const Quiz = ({
             setStatus("wrong");
 
             if (!response?.error) setHearts((prev) => Math.max(prev - 1, 0));
+
+            // Generate AI feedback for incorrect answer using Gemini
+            const aiFeedbackResult = await getAIFeedback(
+              answerText,
+              correctOption.text,
+              challenge.question,
+              challenge.type,
+              false,
+              mistakeHistory as Array<"ARTICLE" | "PREPOSITION" | "TENSE" | "SUBJECT_VERB_AGREEMENT" | "WORD_ORDER" | "VOCABULARY" | "SPELLING" | "PLURAL_SINGULAR" | "PRONOUN" | "ADJECTIVE_ADVERB" | "COMPARATIVE_SUPERLATIVE" | "MODAL_VERB" | "PASSIVE_ACTIVE" | "CONDITIONAL" | "OTHER">
+            );
+
+            if (aiFeedbackResult.success && aiFeedbackResult.feedback) {
+              const feedback = aiFeedbackResult.feedback;
+              setFeedbackData(feedback);
+
+              // Record mistake and feedback
+              if (feedback.mistakeType) {
+                recordUserMistake(
+                  challenge.id,
+                  feedback.mistakeType,
+                  answerText,
+                  correctOption.text,
+                  feedback.explanation
+                ).catch(console.error);
+
+                recordAIFeedback(
+                  challenge.id,
+                  "explanation",
+                  feedback.explanation
+                ).catch(console.error);
+
+                // Update local mistake history
+                setMistakeHistory((prev) => [...prev, feedback.mistakeType!]);
+              }
+
+              // Show feedback modal
+              setShowAIFeedback(true);
+            }
           })
           .catch(() => toast.error("Something went wrong. Please try again."));
       });
@@ -262,6 +344,20 @@ export const Quiz = ({
               />
             )}
 
+            {/* Adaptive Hints - show after wrong attempts */}
+            {status === "wrong" && attemptCount > 0 && (
+              <AdaptiveHints
+                hints={[]}
+                onHintShown={(level) => {
+                  recordAIFeedback(
+                    challenge.id,
+                    "hint",
+                    `Hint level: ${level}`
+                  ).catch(console.error);
+                }}
+              />
+            )}
+
             <div>
               {challenge.type === "ASSIST" && (
                 <QuestionBubble question={challenge.question} />
@@ -281,11 +377,43 @@ export const Quiz = ({
         </div>
       </div>
 
+      {/* AI Feedback Modal */}
+      {feedbackData && (
+        <AIFeedbackModal
+          isOpen={showAIFeedback}
+          onClose={() => setShowAIFeedback(false)}
+          isCorrect={status === "correct"}
+          explanation={feedbackData.explanation}
+          grammarRule={feedbackData.grammarRule}
+          examples={feedbackData.examples}
+          alternatives={feedbackData.alternatives}
+          mistakeType={feedbackData.mistakeType}
+          commonMistakeForVietnamese={feedbackData.commonMistakeForVietnamese}
+          encouragement={feedbackData.encouragement}
+        />
+      )}
+
       <Footer
         disabled={pending || !selectedOption}
         status={status}
         onCheck={onContinue}
       />
+
+      {/* AI Feedback Modal */}
+      {feedbackData && (
+        <AIFeedbackModal
+          isOpen={showAIFeedback}
+          onClose={() => setShowAIFeedback(false)}
+          isCorrect={status === "correct"}
+          explanation={feedbackData.explanation}
+          grammarRule={feedbackData.grammarRule}
+          examples={feedbackData.examples}
+          alternatives={feedbackData.alternatives}
+          mistakeType={feedbackData.mistakeType}
+          commonMistakeForVietnamese={feedbackData.commonMistakeForVietnamese}
+          encouragement={feedbackData.encouragement}
+        />
+      )}
     </>
   );
 };
