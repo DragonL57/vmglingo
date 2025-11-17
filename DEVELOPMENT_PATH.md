@@ -33,7 +33,8 @@ VMGLingo kết hợp yếu tố game hóa và học tập thích ứng của Duo
 
 ### 1.1 **Hệ thống Phản hồi AI-Powered** ⭐ MỚI
 **Ưu tiên: CỰC KỲ QUAN TRỌNG** | **Độ khó: Cao**
-**Cảm hứng từ: Giải thích dựa trên GPT của Duolingo + Phân tích lỗi chi tiết của ELSA**
+
+- **Cảm hứng từ: Giải thích dựa trên GPT của Duolingo + Phân tích lỗi chi tiết của ELSA**
 
 -   [ ] **Giải thích đáp án theo thời gian thực:**
     -   [ ] Hiển thị lý do đáp án đúng/sai bằng NLP.
@@ -63,7 +64,8 @@ VMGLingo kết hợp yếu tố game hóa và học tập thích ứng của Duo
 
 ### 1.2 **Bài kiểm tra xếp lớp Cá nhân hóa** ⭐ MỚI
 **Ưu tiên: CAO** | **Độ khó: Cao**
-**Cảm hứng từ: Đánh giá kỹ năng chi tiết của ELSA**
+
+- **Cảm hứng từ: Đánh giá kỹ năng chi tiết của ELSA**
 
 -   [ ] **Đánh giá ban đầu toàn diện:**
     -   [ ] Kiểm tra kiến thức từ vựng (hơn 500 từ thông dụng).
@@ -132,7 +134,8 @@ VMGLingo kết hợp yếu tố game hóa và học tập thích ứng của Duo
 
 ### 1.4 **Hệ thống Thông báo Thông minh** ⭐ MỚI
 **Ưu tiên: Trung bình** | **Độ khó: Trung bình**
-**Cảm hứng từ: Thời gian nhắc nhở tối ưu bằng AI của Duolingo**
+
+- **Cảm hứng từ: Thời gian nhắc nhở tối ưu bằng AI của Duolingo**
 
 -   [ ] **Phân tích thói quen học tập:**
     -   [ ] Theo dõi thời gian người dùng thường xuyên học.
@@ -157,7 +160,8 @@ VMGLingo kết hợp yếu tố game hóa và học tập thích ứng của Duo
 ---
 
 ## 📋 **Giai đoạn 2: Tinh thông Phát âm & Kỹ năng Nói (Tuần 5-8)**
-**Cảm hứng từ: Sự xuất sắc về phát âm của ELSA Speak**
+
+- **Cảm hứng từ: Sự xuất sắc về phát âm của ELSA Speak**
 
 ### 2.1 **Nhận diện giọng nói Nâng cao (Tích hợp ELSA Speak API)** ⭐ ƯU TIÊN MỚI
 **Ưu tiên: CỰC KỲ QUAN TRỌNG** | **Độ khó: Cao** (Giảm từ "Rất cao" do tận dụng API có sẵn)
@@ -219,7 +223,8 @@ VMGLingo kết hợp yếu tố game hóa và học tập thích ứng của Duo
 
 ### 2.3 **Từ điển Thông minh với Luyện tập** ⭐ MỚI
 **Ưu tiên: Trung bình** | **Độ khó: Trung bình**
-**Cảm hứng từ: Từ điển thông minh của ELSA**
+
+- **Cảm hứng từ: Từ điển thông minh của ELSA**
 
 -   [ ] **Thông tin từ vựng toàn diện:**
     -   [ ] Phiên âm IPA.
@@ -294,7 +299,8 @@ VMGLingo kết hợp yếu tố game hóa và học tập thích ứng của Duo
 
 ### 3.1 **Hệ thống Lặp lại Ngắt quãng Nâng cao (SRS)** ⭐ MỚI
 **Ưu tiên: CỰC KỲ QUAN TRỌNG** | **Độ khó: Rất cao**
-**Cảm hứng từ: Các thuật toán thích ứng của Duolingo**
+
+- **Cảm hứng từ: Các thuật toán thích ứng của Duolingo**
 
 -   [ ] **Thuật toán SRS tinh vi:**
     -   [ ] Triển khai thuật toán SuperMemo SM-2 đã sửa đổi.
@@ -373,7 +379,8 @@ VMGLingo kết hợp yếu tố game hóa và học tập thích ứng của Duo
 
 ### 4.1 **AI Chatbot Nhập vai** ⭐ ƯU TIÊN MỚI
 **Ưu tiên: CỰC KỲ QUAN TRỌNG** | **Độ khó: Rất cao**
-**Cảm hứng từ: Cuộc trò chuyện GPT-4 của Duolingo Max + kịch bản thực tế của ELSA**
+
+- **Cảm hứng từ: Cuộc trò chuyện GPT-4 của Duolingo Max + kịch bản thực tế của ELSA**
 
 -   [ ] **Các kịch bản hội thoại thực tế:**
     -   [ ] Phỏng vấn xin việc (luyện trả lời câu hỏi).
@@ -437,7 +444,8 @@ VMGLingo kết hợp yếu tố game hóa và học tập thích ứng của Duo
 
 ### 4.3 **Học tập dựa trên Video** ⭐ MỚI
 **Ưu tiên: Trung bình** | **Độ khó: Trung bình**
-**Cảm hứng từ: Các bài học video của ELSA**
+
+- **Cảm hứng từ: Các bài học video của ELSA**
 
 -   [ ] **Các bài học video:**
     -   [ ] Hướng dẫn phát âm với chuyển động miệng.
