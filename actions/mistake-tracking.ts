@@ -111,51 +111,60 @@ async function updateGrammarWeakness(userId: string, mistakeType: MistakeType) {
 }
 
 /**
- * Phát hiện các từ dễ nhầm lẫn
+ * Phát hiện các từ/cụm từ dễ nhầm lẫn
  */
 async function detectConfusingWords(
   userId: string,
   userAnswer: string,
   correctAnswer: string
 ) {
-  const userWords = userAnswer.toLowerCase().split(/\s+/);
-  const correctWords = correctAnswer.toLowerCase().split(/\s+/);
+  // Chuẩn hóa cả hai câu
+  const normalizedUserAnswer = userAnswer.toLowerCase().trim();
+  const normalizedCorrectAnswer = correctAnswer.toLowerCase().trim();
+  
+  // Chỉ lưu nếu hai câu hoàn toàn khác nhau (không chỉ khác vài từ)
+  // và không quá dài (tránh lưu cả câu dài)
+  if (normalizedUserAnswer === normalizedCorrectAnswer) {
+    return; // Giống nhau, không cần lưu
+  }
+  
+  // Nếu câu quá dài (>50 ký tự), chỉ lưu các từ/cụm từ khác biệt
+  const userWords = normalizedUserAnswer.split(/\s+/);
+  const correctWords = normalizedCorrectAnswer.split(/\s+/);
+  
+  // Chỉ xử lý nếu là câu ngắn (1-5 từ) - thường là từ vựng đơn
+  if (userWords.length <= 5 && correctWords.length <= 5) {
+    const word1 = normalizedUserAnswer;
+    const word2 = normalizedCorrectAnswer;
 
-  // Tìm các từ khác nhau
-  for (let i = 0; i < Math.min(userWords.length, correctWords.length); i++) {
-    if (userWords[i] !== correctWords[i]) {
-      const word1 = userWords[i];
-      const word2 = correctWords[i];
+    // Kiểm tra xem cặp này đã được ghi nhận chưa
+    const existing = await db.query.confusingWords.findFirst({
+      where: and(
+        eq(confusingWords.userId, userId),
+        sql`(${confusingWords.word1} = ${word1} AND ${confusingWords.word2} = ${word2}) OR
+            (${confusingWords.word1} = ${word2} AND ${confusingWords.word2} = ${word1})`
+      ),
+    });
 
-      // Kiểm tra xem cặp từ này đã được ghi nhận chưa
-      const existing = await db.query.confusingWords.findFirst({
-        where: and(
-          eq(confusingWords.userId, userId),
-          sql`(${confusingWords.word1} = ${word1} AND ${confusingWords.word2} = ${word2}) OR
-              (${confusingWords.word1} = ${word2} AND ${confusingWords.word2} = ${word1})`
-        ),
+    if (existing) {
+      // Cập nhật count
+      await db
+        .update(confusingWords)
+        .set({
+          mistakeCount: existing.mistakeCount + 1,
+          lastMistake: new Date(),
+        })
+        .where(eq(confusingWords.id, existing.id));
+    } else {
+      // Tạo mới
+      const explanation = generateConfusingWordsExplanation(word1, word2);
+      await db.insert(confusingWords).values({
+        userId,
+        word1,
+        word2,
+        mistakeCount: 1,
+        explanation,
       });
-
-      if (existing) {
-        // Cập nhật count
-        await db
-          .update(confusingWords)
-          .set({
-            mistakeCount: existing.mistakeCount + 1,
-            lastMistake: new Date(),
-          })
-          .where(eq(confusingWords.id, existing.id));
-      } else {
-        // Tạo mới
-        const explanation = generateConfusingWordsExplanation(word1, word2);
-        await db.insert(confusingWords).values({
-          userId,
-          word1,
-          word2,
-          mistakeCount: 1,
-          explanation,
-        });
-      }
     }
   }
 }
@@ -164,21 +173,29 @@ async function detectConfusingWords(
  * Tạo giải thích cho các từ dễ nhầm lẫn
  */
 function generateConfusingWordsExplanation(word1: string, word2: string): string {
-  // Có thể mở rộng với database các từ dễ nhầm lẫn
+  // Database các cặp từ/cụm từ dễ nhầm lẫn phổ biến
   const commonPairs: Record<string, string> = {
     "affect-effect": "Affect là động từ (ảnh hưởng), Effect là danh từ (hiệu quả)",
     "accept-except": "Accept = chấp nhận, Except = ngoại trừ",
-    "there-their-theyre": "There = ở đó, Their = của họ, They're = họ là",
-    "your-youre": "Your = của bạn, You're = bạn là",
-    "its-its": "Its = của nó, It's = nó là",
+    "there-their-they're": "There = ở đó, Their = của họ, They're = họ là",
+    "your-you're": "Your = của bạn, You're = bạn là",
+    "its-it's": "Its = của nó, It's = nó là",
     "to-too-two": "To = đến, Too = quá, Two = số 2",
     "then-than": "Then = sau đó, Than = hơn (so sánh)",
+    "hello-goodbye": "Hello = xin chào (gặp gỡ), Goodbye = tạm biệt (chia tay)",
+    "thank you-you're welcome": "Thank you = cảm ơn, You're welcome = không có gì",
+    "good morning-good night": "Good morning = chào buổi sáng, Good night = chúc ngủ ngon",
+    "yes-no": "Yes = có/đồng ý, No = không/từ chối",
   };
 
-  const key = `${word1}-${word2}`;
+  // Thử tìm cặp từ theo cả hai hướng
+  const key1 = `${word1}-${word2}`;
+  const key2 = `${word2}-${word1}`;
+  
   return (
-    commonPairs[key] ||
-    `"${word1}" và "${word2}" thường bị nhầm lẫn. Hãy chú ý nghĩa và cách dùng của từng từ.`
+    commonPairs[key1] ||
+    commonPairs[key2] ||
+    `"${word1}" và "${word2}" thường bị nhầm lẫn. Hãy chú ý nghĩa và ngữ cảnh sử dụng.`
   );
 }
 
